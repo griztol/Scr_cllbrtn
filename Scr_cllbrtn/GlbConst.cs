@@ -39,6 +39,7 @@ namespace Scr_cllbrtn
             //new BybitFt(),
             new MexcSp(),
             new GateFt(),
+            new GateSp(),
             //new HtxFt(),
             //new HtxSp(),
             //new KucoinFt(),
