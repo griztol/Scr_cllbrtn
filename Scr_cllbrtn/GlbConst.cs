@@ -31,7 +31,7 @@ namespace Scr_cllbrtn
         public static List<DealCloser> deals = new List<DealCloser>();
         public static readonly ImmutableArray<BaseExchange> ActiveEx =
         [
-            //new BingxFt(),
+            new BingxFt(),
             //new BingxSp(),
             new BitgetFt(),
             //new BitgetSp(),

@@ -48,6 +48,12 @@ namespace Scr_cllbrtn.Exchanges
 
         public override async Task<CurData> GetLastPriceAsync(string curNm)
         {
+            if (!meta[curNm].Active)
+            {
+                Logger.Add(curNm, "Not active in " + exName, LogType.Info);
+                throw new Exception(curNm + "Not active in " + exName);
+            }
+
             string symbol = curNm.Replace("USDT", "-USDT");
             string ans = await SendApiRequestToExchangeAsync($"https://open-api.bingx.com/openApi/swap/v2/quote/depth?symbol={symbol}&limit=5");
 

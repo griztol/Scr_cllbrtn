@@ -36,13 +36,13 @@ namespace Scr_cllbrtn
             if (GlbConst.deals.Count >= GlbConst.MaxOpenedDeals) { return; }
 
             //double limitUsd = (double)AssetLimitManager.GetLimit(curSell.name) - (double)GlbConst.StepUsd * 0.5;
-            double limitUsd = 1.5;
-            if ((double)curSell.Balance * (double)curSell.askPrice > limitUsd ||
-                (double)curBuy.Balance * (double)curBuy.bidPrice > limitUsd)
-            {
-                Logger.Add(curSell.name, $"Balance > {limitUsd}$ (limit - step 50%)", LogType.Info);
-                return;
-            }
+            //double limitUsd = 1.5;
+            //if ((double)curSell.Balance * (double)curSell.askPrice > limitUsd ||
+            //    (double)curBuy.Balance * (double)curBuy.bidPrice > limitUsd)
+            //{
+            //    Logger.Add(curSell.name, $"Balance > {limitUsd}$ (limit - step 50%)", LogType.Info);
+            //    return;
+            //}
 
             double deltaIn = (double)(curSell.bidPrice / curBuy.askPrice * 100 - 100);
             double deltaOut = (double)(curBuy.bidPrice / curSell.askPrice * 100 - 100);
@@ -65,14 +65,10 @@ namespace Scr_cllbrtn
 
             if (deltaIn > inThreshold && deltaIn < 10)
             {
-                DealCloser d = dealer.MakeDealAsync(curBuy, curSell).Result;
-                if (d != null) { GlbConst.deals.Add(d); }
+                //DealCloser d = dealer.MakeDealAsync(curBuy, curSell).Result;
+                //if (d != null) { GlbConst.deals.Add(d); }
+                Console.WriteLine($"{curBuy.name} {curBuy.exchange} {curSell.exchange} {deltaIn}");
             }
-
-            //if (deltaIn > 1 && deltaIn < 10)
-            //{
-            //    Console.WriteLine($"{curBuy.name} {curBuy.exchange} {curSell.exchange} {deltaIn}");
-            //}
 
         }
     }

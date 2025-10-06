@@ -111,20 +111,6 @@ using System.Collections.Concurrent;
 //return;
 
 
-
-InOutPercent.LoadInitialData();
-_ = Task.Run(async () =>
-{
-    while (true)
-    {
-        if (GlbConst.workStopped)
-        {
-            await InOutPercent.SaveCheckpointAsync();
-            await AssetLimitManager.SaveLimitsAsync();
-        }
-        await Task.Delay(TimeSpan.FromMinutes(1));
-    }
-});
 Keeper keeper = new Keeper();
 
 ConcurrentDictionary<(int, int), HashSet<string>> commonCoins = new();
@@ -155,7 +141,6 @@ _ = Task.Run(async () =>
             {
                 var set = GlbConst.ActiveEx[i].meta.Keys
                     .Intersect(GlbConst.ActiveEx[j].meta.Keys, StringComparer.OrdinalIgnoreCase)
-                    .Where(c => GlbConst.ActiveEx[i].meta[c].Active && GlbConst.ActiveEx[j].meta[c].Active)
                     .ToHashSet(StringComparer.OrdinalIgnoreCase);
 
                 if (GlbConst.ActiveEx[j].exName.EndsWith("Ft", StringComparison.OrdinalIgnoreCase))
@@ -212,12 +197,13 @@ while (true)
 async Task CompareCurAsync(Task<Dictionary<string, CurData>> t1, Task<Dictionary<string, CurData>> t2, HashSet<string> coins)
 {
     //List<string> lines = new List<string>();
-    try { await t1; await t2; }
-    catch (Exception) 
-    {
-        Logger.Add(null, "CompareCurAsync error", LogType.Error);
-        return;
-    }
+    await t1; await t2;
+    //try { await t1; await t2; }
+    //catch (Exception) 
+    //{
+    //    Logger.Add(null, "CompareCurAsync error", LogType.Error);
+    //    return;
+    //}
 
     bool needNewDeals = keeper.NeedNewDeals();
 
@@ -237,7 +223,6 @@ async Task CompareCurAsync(Task<Dictionary<string, CurData>> t1, Task<Dictionary
 
         double dIn = (c2.bidPrice / c1.askPrice) * 100 - 100;
         double dOut = (c1.bidPrice / c2.askPrice) * 100 - 100;
-        InOutPercent.AddRecord(c1, c2, dIn, dOut);
 
         if (needNewDeals)
         {

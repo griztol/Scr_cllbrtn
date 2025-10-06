@@ -242,7 +242,6 @@ namespace Scr_cllbrtn
                     if ((DateTime.Now - _lastAdjust).TotalMinutes >= GlbConst.WaitingTime)
                     {
                         timePenalty += 0.001m;
-                        AssetLimitManager.Decrease(curBuy.name, GlbConst.StepUsd);
                         //curBuy.AddToBlackList(); curSell.AddToBlackList();
                         Logger.Add(curBuy.name, "timePenalty = " + timePenalty, LogType.Info);
                         //_ = File.AppendAllTextAsync(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\BlackList.txt", curBuy.name + "\r\n");
@@ -299,7 +298,6 @@ namespace Scr_cllbrtn
             if (r.success)
             {
                 if(!GlbConst.workStopped) timePenalty = 0;
-                AssetLimitManager.IncreaseLinear(curBuy.name, (double)Math.Abs(qty) * curSell.bidPrice);
             }
                 
             return r.success;

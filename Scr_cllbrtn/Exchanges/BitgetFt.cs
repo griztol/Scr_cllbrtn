@@ -39,7 +39,7 @@ namespace Scr_cllbrtn.Exchanges
                 o.OutputOriginalData = true;
             });
 
-            SubscribeToUpdateOrders();
+            //SubscribeToUpdateOrders();
         }
 
         public override async Task<Dictionary<string, CurData>> GetAllCurrenciesAsync()
@@ -73,6 +73,12 @@ namespace Scr_cllbrtn.Exchanges
 
         public override async Task<CurData> GetLastPriceAsync(string curNm)
         {
+            if (!meta[curNm].Active)
+            {
+                Logger.Add(curNm, "Not active in " + exName, LogType.Info);
+                throw new Exception(curNm + "Not active in " + exName);
+            }
+
             string ans = await SendApiRequestToExchangeAsync(
                 $"https://api.bitget.com/api/v3/market/orderbook?category=USDT-FUTURES&symbol={curNm}&limit=5");
             Logger.Add(curNm, exName + " " + ans, LogType.Data);
@@ -308,7 +314,7 @@ namespace Scr_cllbrtn.Exchanges
                 if (item["pricePrecision"] != null)
                     pricePrecision = (byte)int.Parse(item["pricePrecision"].ToString(), CultureInfo.InvariantCulture);
 
-                var metaEntry = new CoinMeta
+                var m = new CoinMeta
                 {
                     Step = step,
                     Active = active,
@@ -318,7 +324,8 @@ namespace Scr_cllbrtn.Exchanges
                     PricePrecision = item["pricePrecision"],
                     MinOrderUSDT = 5
                 };
-                base.meta.AddOrUpdate(curNm, metaEntry, (_, __) => metaEntry);
+
+                base.meta.AddOrUpdate(curNm, m, (_, __) => m);
             }
         }
 

@@ -40,7 +40,7 @@ namespace Scr_cllbrtn.Exchanges
             });
 
             UpdateBalanceAsync(new CurData(this, "BTCUSDT")).GetAwaiter().GetResult();
-            SubscribeToUpdateOrders();
+            //SubscribeToUpdateOrders();
         }
 
         public override async Task<Dictionary<string, CurData>> GetAllCurrenciesAsync()
@@ -79,8 +79,8 @@ namespace Scr_cllbrtn.Exchanges
                     continue;
                 totalBalanceInUsdt += (double)balance * curData.bidPrice;
             }
-            totalBalanceInUsdt += (double)generalBalance["USDT"];
-            Volatile.Write(ref _totalUsdt, totalBalanceInUsdt);
+            //totalBalanceInUsdt += (double)generalBalance["USDT"];
+            //Volatile.Write(ref _totalUsdt, totalBalanceInUsdt);
             return res;
         }
 

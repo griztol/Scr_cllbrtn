@@ -65,6 +65,12 @@ namespace Scr_cllbrtn.Exchanges
 
         public override async Task<CurData> GetLastPriceAsync(string curNm)
         {
+            if (!meta[curNm].Active)
+            {
+                Logger.Add(curNm, "Not active in " + exName, LogType.Info);
+                throw new Exception(curNm + "Not active in " + exName);
+            }
+
             string ans = await SendApiRequestToExchangeAsync(
                 "https://fx-api.gateio.ws/api/v4/futures/usdt/order_book?limit=3&contract="
                 + curNm.Replace("USDT", "_USDT")
@@ -460,7 +466,7 @@ namespace Scr_cllbrtn.Exchanges
                     LastUpdateTm = DateTime.Now,
                     MinOrderUSDT = 1
                 };
-
+                Console.WriteLine(m.FundingRate);
                 base.meta.AddOrUpdate(curNm, m, (_, __) => m);
             }
         }
