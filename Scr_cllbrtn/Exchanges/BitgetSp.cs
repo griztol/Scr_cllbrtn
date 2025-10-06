@@ -2,7 +2,7 @@
 using Newtonsoft.Json.Linq;
 using System.Globalization;
 
-namespace Screener.Exchanges
+namespace Scr_cllbrtn.Exchanges
 {
     public class BitgetSp : BaseExchange
     {

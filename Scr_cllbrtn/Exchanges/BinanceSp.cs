@@ -8,7 +8,7 @@ using System.Collections.Concurrent;
 using System.Globalization;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace Screener.Exchanges
+namespace Scr_cllbrtn.Exchanges
 {
     public class BinanceSp : BaseExchange
     {

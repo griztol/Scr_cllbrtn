@@ -10,7 +10,7 @@ using Kucoin.Net.Objects;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Screener.Exchanges
+namespace Scr_cllbrtn.Exchanges
 {
     public class KucoinSp : BaseExchange
     {

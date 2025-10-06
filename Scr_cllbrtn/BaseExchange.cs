@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace Screener
+namespace Scr_cllbrtn
 {
     public record CoinMeta
     {

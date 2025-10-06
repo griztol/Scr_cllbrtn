@@ -14,7 +14,7 @@ using Bitget.Net.Objects.Models.V2;
 using System.Collections.Concurrent;
 using CryptoExchange.Net.Objects;
 
-namespace Screener.Exchanges
+namespace Scr_cllbrtn.Exchanges
 {
     public class BitgetFt : BaseExchange
     {

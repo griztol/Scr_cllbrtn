@@ -9,7 +9,7 @@ using System.Globalization;
 using System.Collections.Generic;
 
 
-namespace Screener.Exchanges
+namespace Scr_cllbrtn.Exchanges
 {
     public class MexcSp : BaseExchange
     {

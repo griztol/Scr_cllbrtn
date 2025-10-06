@@ -12,7 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Screener.Exchanges
+namespace Scr_cllbrtn.Exchanges
 {
     public class HtxSp : BaseExchange
     {

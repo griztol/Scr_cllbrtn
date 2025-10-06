@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace Screener.Exchanges
+namespace Scr_cllbrtn.Exchanges
 {
     internal class MexcFt : BaseExchange
     {

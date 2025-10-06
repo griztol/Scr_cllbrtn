@@ -9,7 +9,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace Screener
+namespace Scr_cllbrtn
 {
     public static class InOutPercent
     {

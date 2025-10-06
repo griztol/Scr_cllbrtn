@@ -1,8 +1,8 @@
 ﻿using CryptoExchange.Net.Attributes;
 using CryptoExchange.Net.Requests;
 using Newtonsoft.Json;
-using Screener;
-using Screener.Exchanges;
+using Scr_cllbrtn;
+using Scr_cllbrtn.Exchanges;
 using System.IO;
 using System.Diagnostics;
 using System.Globalization;

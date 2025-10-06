@@ -11,7 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CryptoExchange.Net.Authentication;
 
-namespace Screener.Exchanges
+namespace Scr_cllbrtn.Exchanges
 {
     public class BybitFt : BaseExchange
     {
