@@ -21,6 +21,10 @@ namespace Scr_cllbrtn
         public const double StepUsd = 30;
         public static bool workStopped = false;
 
+        public const double LiquidityCheckUsd = 100.0;     // имитация сделки на $100
+        public const double EntrySpreadPercent = 3.0;       // вход >= 3%
+        public const double ExitSpreadFloorPercent = -5.0;  // выход >= -5%
+
         public static double? totalUsdtFloor = null;
         static readonly object totalUsdtFloorLock = new();
 

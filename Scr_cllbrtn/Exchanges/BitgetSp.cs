@@ -64,8 +64,8 @@ namespace Scr_cllbrtn.Exchanges
                 .Select(b => new double[] { b[0]!.Value<double>(), b[1]!.Value<double>() })
                 .ToList();
 
-            var (askPrice, askAmount) = CalculatePriceWithFirstLevelAlwaysTaken(asks, meta[curNm].MinOrderUSDT);
-            var (bidPrice, bidAmount) = CalculatePriceWithFirstLevelAlwaysTaken(bids, meta[curNm].MinOrderUSDT);
+            var (askPrice, askAmount) = CalculatePriceWithFirstLevelAlwaysTaken(asks, GlbConst.LiquidityCheckUsd);
+            var (bidPrice, bidAmount) = CalculatePriceWithFirstLevelAlwaysTaken(bids, GlbConst.LiquidityCheckUsd);
 
             CurData curData = new CurData(this, curNm)
             {

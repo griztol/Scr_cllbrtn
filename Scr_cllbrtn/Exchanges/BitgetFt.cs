@@ -104,8 +104,8 @@ namespace Scr_cllbrtn.Exchanges
                 .Select(b => new double[] { b[0].Value<double>(), b[1].Value<double>() * multiplier })
                 .ToList();
 
-            var (askPrice, askAmount) = CalculatePriceWithFirstLevelAlwaysTaken(asks, 5);
-            var (bidPrice, bidAmount) = CalculatePriceWithFirstLevelAlwaysTaken(bids, 5);
+            var (askPrice, askAmount) = CalculatePriceWithFirstLevelAlwaysTaken(asks, GlbConst.LiquidityCheckUsd);
+            var (bidPrice, bidAmount) = CalculatePriceWithFirstLevelAlwaysTaken(bids, GlbConst.LiquidityCheckUsd);
 
             return new CurData(this, curNm)
             {
