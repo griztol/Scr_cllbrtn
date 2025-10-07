@@ -311,15 +311,13 @@ namespace Scr_cllbrtn.Exchanges
                     string? fundingRateStr = ticker["fundingRate"]?.ToString();
                     if (!string.IsNullOrEmpty(fundingRateStr) && double.TryParse(fundingRateStr, NumberStyles.Any, CultureInfo.InvariantCulture, out double fundingRate))
                     {
-                        fundingRates[symbol] = fundingRate * 100.0;
+                        fundingRates[symbol] = fundingRate;
                     }
                 }
             }
 
             string ans = await SendApiRequestToExchangeAsync("https://api.bitget.com/api/v3/market/instruments?category=USDT-FUTURES");
             var data = JsonConvert.DeserializeObject<dynamic>(ans)?["data"];
-            if (data == null)
-                return;
 
             foreach (var item in data)
             {
@@ -352,12 +350,12 @@ namespace Scr_cllbrtn.Exchanges
                     Step = step,
                     Active = active,
                     InBlackList = meta.TryGetValue(curNm, out var existing) && existing.InBlackList,
-                    FundingRate = fundingRateValue,
+                    FundingRate = fundingRateValue * 100,
                     LastUpdateTm = DateTime.UtcNow,
                     PricePrecision = pricePrecision,
                     MinOrderUSDT = 5
                 };
-                Console.WriteLine(m.FundingRate);
+                
                 base.meta.AddOrUpdate(curNm, m, (_, __) => m);
             }
         }

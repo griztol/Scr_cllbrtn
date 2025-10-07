@@ -101,8 +101,6 @@ namespace Scr_cllbrtn.Exchanges
         {
             string ans = await SendApiRequestToExchangeAsync("https://open-api.bingx.com/openApi/swap/v2/quote/contracts");
             var data = JsonConvert.DeserializeObject<dynamic>(ans)?["data"];
-            if (data == null)
-                return;
 
             Dictionary<string, double> fundingRates = new(StringComparer.OrdinalIgnoreCase);
             string premiumAns = await SendApiRequestToExchangeAsync("https://open-api.bingx.com/openApi/swap/v2/quote/premiumIndex");
