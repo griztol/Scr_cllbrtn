@@ -65,8 +65,8 @@ namespace Scr_cllbrtn
 
             if (deltaIn > inThreshold && deltaIn < 10)
             {
-                //DealCloser d = dealer.MakeDealAsync(curBuy, curSell).Result;
-                //if (d != null) { GlbConst.deals.Add(d); }
+                DealCloser d = dealer.MakeDealAsync(curBuy, curSell).Result;
+                if (d != null) { GlbConst.deals.Add(d); }
                 Console.WriteLine($"{curBuy.name} {curBuy.exchange} {curSell.exchange} {deltaIn}");
             }
 

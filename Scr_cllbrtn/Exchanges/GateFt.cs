@@ -72,7 +72,7 @@ namespace Scr_cllbrtn.Exchanges
             }
 
             string ans = await SendApiRequestToExchangeAsync(
-                "https://fx-api.gateio.ws/api/v4/futures/usdt/order_book?limit=3&contract="
+                "https://fx-api.gateio.ws/api/v4/futures/usdt/order_book?limit=5&contract="
                 + curNm.Replace("USDT", "_USDT")
             );
 

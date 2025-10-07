@@ -93,7 +93,7 @@ namespace Scr_cllbrtn.Exchanges
             }
 
             string ans = await SendApiRequestToExchangeAsync(
-                "https://api.mexc.com/api/v3/depth?limit=5&symbol=" + curNm
+                "https://api.mexc.com/api/v3/depth?limit=7&symbol=" + curNm
             );
             Logger.Add(curNm, exName + " " + ans, LogType.Data);
 

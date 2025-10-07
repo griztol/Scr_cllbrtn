@@ -42,8 +42,8 @@ namespace Scr_cllbrtn
                 return null;
             }
 
-            //LogPotentialDeal(curBuy, curSell);
-            //return null;
+            LogPotentialDeal(curBuy, curSell);
+            return null;
 
             Logger.Add(curBuy.name, $"{curBuy.exchange} PendingPriceIn Buy: {curBuy.askPrice};", LogType.Info);
             Logger.Add(curSell.name, $"{curSell.exchange} PendingPriceIn Sell: {curSell.bidPrice};", LogType.Info);
