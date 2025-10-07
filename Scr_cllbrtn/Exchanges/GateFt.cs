@@ -466,7 +466,6 @@ namespace Scr_cllbrtn.Exchanges
                     LastUpdateTm = DateTime.Now,
                     MinOrderUSDT = 1
                 };
-                Console.WriteLine(m.FundingRate);
                 base.meta.AddOrUpdate(curNm, m, (_, __) => m);
             }
         }

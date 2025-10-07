@@ -39,7 +39,7 @@ namespace Scr_cllbrtn.Exchanges
                 o.OutputOriginalData = true;
             });
 
-            //SubscribeToUpdateOrders();
+            SubscribeToUpdateOrders();
         }
 
         public override async Task<Dictionary<string, CurData>> GetAllCurrenciesAsync()
@@ -296,35 +296,68 @@ namespace Scr_cllbrtn.Exchanges
 
         public override async Task RefreshMetadataAsync()
         {
+            string tickersAns = await SendApiRequestToExchangeAsync("https://api.bitget.com/api/v3/market/tickers?category=USDT-FUTURES");
+            var tickers = JsonConvert.DeserializeObject<dynamic>(tickersAns)?["data"];
+            Dictionary<string, double> fundingRates = new(StringComparer.OrdinalIgnoreCase);
+
+            if (tickers != null)
+            {
+                foreach (var ticker in tickers)
+                {
+                    string? symbol = ticker["symbol"]?.ToString();
+                    if (string.IsNullOrEmpty(symbol))
+                        continue;
+
+                    string? fundingRateStr = ticker["fundingRate"]?.ToString();
+                    if (!string.IsNullOrEmpty(fundingRateStr) && double.TryParse(fundingRateStr, NumberStyles.Any, CultureInfo.InvariantCulture, out double fundingRate))
+                    {
+                        fundingRates[symbol] = fundingRate * 100.0;
+                    }
+                }
+            }
+
             string ans = await SendApiRequestToExchangeAsync("https://api.bitget.com/api/v3/market/instruments?category=USDT-FUTURES");
             var data = JsonConvert.DeserializeObject<dynamic>(ans)?["data"];
-            if (data == null) return;
+            if (data == null)
+                return;
+
             foreach (var item in data)
             {
-                string curNm = item["symbol"].ToString();
+                string curNm = item["symbol"]?.ToString() ?? string.Empty;
+                if (string.IsNullOrEmpty(curNm))
+                    continue;
 
                 decimal step = 1m;
-                if (item["quantityMultiplier"] != null)
-                    step = decimal.Parse(item["quantityMultiplier"].ToString(), CultureInfo.InvariantCulture);
+                string? stepStr = item["quantityMultiplier"]?.ToString();
+                if (!string.IsNullOrEmpty(stepStr) &&
+                    decimal.TryParse(stepStr, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal parsedStep) &&
+                    parsedStep > 0)
+                {
+                    step = parsedStep;
+                }
 
                 bool active = item["status"] != null &&
-                    ((string)item["status"]).Equals("online", StringComparison.OrdinalIgnoreCase);
+                    item["status"].ToString().Equals("online", StringComparison.OrdinalIgnoreCase);
 
                 byte pricePrecision = 0;
-                if (item["pricePrecision"] != null)
-                    pricePrecision = (byte)int.Parse(item["pricePrecision"].ToString(), CultureInfo.InvariantCulture);
+                string? pricePrecisionStr = item["pricePrecision"]?.ToString();
+                if (!string.IsNullOrEmpty(pricePrecisionStr) &&
+                    byte.TryParse(pricePrecisionStr, NumberStyles.Integer, CultureInfo.InvariantCulture, out byte parsedPrecision))
+                    pricePrecision = parsedPrecision;
+
+                fundingRates.TryGetValue(curNm, out double fundingRateValue);
 
                 var m = new CoinMeta
                 {
                     Step = step,
                     Active = active,
-                    InBlackList = meta.TryGetValue(curNm, out var b) ? b.InBlackList : false,
-                    FundingRate = item["fundingRate"] != null ? (double)item["fundingRate"] : 0,
+                    InBlackList = meta.TryGetValue(curNm, out var existing) && existing.InBlackList,
+                    FundingRate = fundingRateValue,
                     LastUpdateTm = DateTime.UtcNow,
-                    PricePrecision = item["pricePrecision"],
+                    PricePrecision = pricePrecision,
                     MinOrderUSDT = 5
                 };
-
+                Console.WriteLine(m.FundingRate);
                 base.meta.AddOrUpdate(curNm, m, (_, __) => m);
             }
         }
