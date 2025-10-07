@@ -104,6 +104,23 @@ namespace Scr_cllbrtn.Exchanges
             if (data == null)
                 return;
 
+            Dictionary<string, double> fundingRates = new(StringComparer.OrdinalIgnoreCase);
+            string premiumAns = await SendApiRequestToExchangeAsync("https://open-api.bingx.com/openApi/swap/v2/quote/premiumIndex");
+            var premiumData = JsonConvert.DeserializeObject<dynamic>(premiumAns)?["data"];
+            if (premiumData != null)
+            {
+                foreach (var premiumItem in premiumData)
+                {
+                    string premiumSymbol = ((string)premiumItem["symbol"]).Replace("-", "").ToUpper();
+                    string? premiumFundingStr = premiumItem["lastFundingRate"]?.ToString();
+                    if (!string.IsNullOrEmpty(premiumFundingStr) &&
+                        double.TryParse(premiumFundingStr, NumberStyles.Any, CultureInfo.InvariantCulture, out double premiumFunding))
+                    {
+                        fundingRates[premiumSymbol] = premiumFunding;
+                    }
+                }
+            }
+
             foreach (var item in data)
             {
                 string curNm = ((string)item["symbol"]).Replace("-", "").ToUpper();
@@ -116,9 +133,12 @@ namespace Scr_cllbrtn.Exchanges
                 bool active = (item["status"]?.ToString() ?? "1") == "1";
 
                 double fundingRate = 0;
-                string? frStr = item["fundingRate"]?.ToString();
-                if (!string.IsNullOrEmpty(frStr))
-                    double.TryParse(frStr, NumberStyles.Any, CultureInfo.InvariantCulture, out fundingRate);
+                if (!fundingRates.TryGetValue(curNm, out fundingRate))
+                {
+                    string? frStr = item["fundingRate"]?.ToString();
+                    if (!string.IsNullOrEmpty(frStr))
+                        double.TryParse(frStr, NumberStyles.Any, CultureInfo.InvariantCulture, out fundingRate);
+                }
 
                 var m = new CoinMeta
                 {
