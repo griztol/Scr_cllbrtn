@@ -93,7 +93,7 @@ namespace Scr_cllbrtn.Exchanges
             }
 
             string ans = await SendApiRequestToExchangeAsync(
-                "https://api.mexc.com/api/v3/depth?limit=3&symbol=" + curNm
+                "https://api.mexc.com/api/v3/depth?limit=5&symbol=" + curNm
             );
             Logger.Add(curNm, exName + " " + ans, LogType.Data);
 
@@ -117,8 +117,8 @@ namespace Scr_cllbrtn.Exchanges
                 .Select(b => new double[] { b[0].Value<double>(), b[1].Value<double>() })
                 .ToList();
 
-            var (askPrice, askAmount) = CalculatePriceWithFirstLevelAlwaysTaken(asks, (double)GlbConst.StepUsd);
-            var (bidPrice, bidAmount) = CalculatePriceWithFirstLevelAlwaysTaken(bids, (double)GlbConst.StepUsd);
+            var (askPrice, askAmount) = CalculatePriceWithFirstLevelAlwaysTaken(asks, GlbConst.LiquidityCheckUsd);
+            var (bidPrice, bidAmount) = CalculatePriceWithFirstLevelAlwaysTaken(bids, GlbConst.LiquidityCheckUsd);
 
             // Create CurData
             var curData = new CurData(this, curNm)

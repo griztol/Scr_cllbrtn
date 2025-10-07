@@ -15,7 +15,7 @@ namespace Scr_cllbrtn
     {
         public static (double inPrc, double outPrc) GetCurrentThresholds(CurData buy, CurData sell)
         {
-            return (1.5, 0);
+            return (GlbConst.EntrySpreadPercent, 0);
         }
 
     }

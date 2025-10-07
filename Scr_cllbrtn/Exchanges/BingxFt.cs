@@ -78,8 +78,8 @@ namespace Scr_cllbrtn.Exchanges
                 })
                 .ToList();
 
-            var (askPrice, askAmount) = CalculatePriceWithFirstLevelAlwaysTaken(asks, 5);
-            var (bidPrice, bidAmount) = CalculatePriceWithFirstLevelAlwaysTaken(bids, 5);
+            var (askPrice, askAmount) = CalculatePriceWithFirstLevelAlwaysTaken(asks, GlbConst.LiquidityCheckUsd);
+            var (bidPrice, bidAmount) = CalculatePriceWithFirstLevelAlwaysTaken(bids, GlbConst.LiquidityCheckUsd);
 
             DateTime ts = DateTime.UtcNow;
             if (item["T"] != null)

@@ -129,17 +129,31 @@ namespace Scr_cllbrtn
 
         public bool IsReadyForDeal(CurData cS, CurData cB)
         {
-            bool res = true;
-            if (cS == null || cB == null) { return false; }
+            if (cS == null || cB == null) return false;
 
-            double dIn = (double)(cS.bidPrice / cB.askPrice * 100 - 100);
-            if (cB.askPrice * cB.askAmount < cB.minOrderUSDT) { Logger.Add(cB.name,"cB_Amount " + cB.askPrice * cB.askAmount + " < MinBuyUSDT", LogType.Info); return false; }
-            if (cS.bidPrice * cS.bidAmount < cS.minOrderUSDT) { Logger.Add(cS.name, "cS_Amount " + cS.bidPrice * cS.bidAmount + " < MinBuyUSDT", LogType.Info); return false; }
+            bool enoughBuy = cB.askPrice * cB.askAmount >= GlbConst.LiquidityCheckUsd;
+            bool enoughSell = cS.bidPrice * cS.bidAmount >= GlbConst.LiquidityCheckUsd;
+            if (!enoughBuy || !enoughSell)
+            {
+                Logger.Add(cB.name, $"Liquidity fail: buyUSD={(cB.askPrice * cB.askAmount):F2}, sellUSD={(cS.bidPrice * cS.bidAmount):F2} (need >= {GlbConst.LiquidityCheckUsd})", LogType.Info);
+                return false;
+            }
 
-            Logger.Add(cB.name, "NowDelta = " + dIn + ", NeedDelta = " + InOutPercent.GetCurrentThresholds(cB, cS).inPrc, LogType.Info);
-            if (dIn < InOutPercent.GetCurrentThresholds(cB, cS).inPrc) { return false; }
+            if (cB.askPrice * cB.askAmount < cB.minOrderUSDT) { Logger.Add(cB.name, "cB_Amount < MinOrderUSDT", LogType.Info); return false; }
+            if (cS.bidPrice * cS.bidAmount < cS.minOrderUSDT) { Logger.Add(cS.name, "cS_Amount < MinOrderUSDT", LogType.Info); return false; }
 
-            return res;
+            double dIn = cS.bidPrice / cB.askPrice * 100 - 100;
+            double dOut = cB.bidPrice / cS.askPrice * 100 - 100;
+
+            double inNeed = InOutPercent.GetCurrentThresholds(cB, cS).inPrc;
+            double outFloor = GlbConst.ExitSpreadFloorPercent;
+
+            Logger.Add(cB.name, $"NowDeltaIn = {dIn:F3}%, NeedDeltaIn = {inNeed:F3}%; NowDeltaOut = {dOut:F3}%, MinDeltaOut = {outFloor:F3}%", LogType.Info);
+
+            if (dIn < inNeed) return false;
+            if (dOut < outFloor) return false;
+
+            return true;
         }
 
         private static void LogPotentialDeal(CurData buy, CurData sell)
