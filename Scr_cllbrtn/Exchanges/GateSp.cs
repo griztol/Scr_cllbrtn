@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Scr_cllbrtn.Exchanges
@@ -60,8 +61,54 @@ namespace Scr_cllbrtn.Exchanges
             return res;
         }
 
-        public override Task<CurData> GetLastPriceAsync(string curNm)
-            => throw new NotImplementedException();
+        public override async Task<CurData> GetLastPriceAsync(string curNm)
+        {
+            if (!meta[curNm].Active)
+            {
+                Logger.Add(curNm, "Not active in " + exName, LogType.Info);
+                throw new Exception(curNm + "Not active in " + exName);
+            }
+
+            string ans = await SendApiRequestToExchangeAsync(
+                "https://api.gateio.ws/api/v4/spot/order_book?limit=5&currency_pair="
+                + curNm.Replace("USDT", "_USDT")
+            );
+            Logger.Add(curNm, exName + " " + ans, LogType.Data);
+
+            JObject? jsonData = JsonConvert.DeserializeObject<JObject>(ans);
+            if (jsonData == null)
+                throw new Exception("JSON parse error");
+
+            double tsVal = jsonData["current"] != null ? jsonData["current"].Value<double>() : 0.0;
+            DateTime ts = DateTimeOffset.FromUnixTimeMilliseconds((long)(tsVal)).LocalDateTime;
+
+            var asksToken = jsonData["asks"] as JArray;
+            var bidsToken = jsonData["bids"] as JArray;
+            if (asksToken == null || bidsToken == null)
+                throw new Exception("Invalid response: no asks/bids");
+
+            List<double[]> asks = asksToken
+                .Select(a => new double[] { a[0].Value<double>(), a[1].Value<double>() })
+                .ToList();
+
+            List<double[]> bids = bidsToken
+                .Select(b => new double[] { b[0].Value<double>(), b[1].Value<double>() })
+                .ToList();
+
+            var (askPrice, askAmount) = CalculatePriceWithFirstLevelAlwaysTaken(asks, GlbConst.LiquidityCheckUsd);
+            var (bidPrice, bidAmount) = CalculatePriceWithFirstLevelAlwaysTaken(bids, GlbConst.LiquidityCheckUsd);
+
+            var curData = new CurData(this, curNm)
+            {
+                askPrice = askPrice,
+                askAmount = askAmount,
+                bidPrice = bidPrice,
+                bidAmount = bidAmount,
+                Timestamp = ts
+            };
+
+            return curData;
+        }
 
         public override void SubscribeToUpdatePrices(CurData crDt, Action<object> updateAction)
             => throw new NotImplementedException();
