@@ -12,7 +12,7 @@ namespace Scr_cllbrtn
 {
     public static class GlbConst
     {
-        public const int MaxOpenedDeals = 2;
+        public const int MaxOpenedDeals = 20;
         public const double DeltaInOut = 0.99;
         public static volatile int WaitingTime = 30;
 

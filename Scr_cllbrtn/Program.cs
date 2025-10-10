@@ -9,25 +9,30 @@ using System.Globalization;
 using System.Linq.Expressions;
 using System.Collections.Concurrent;
 
-//var exc = new BitgetFt();
+//var exc = new MexcSp();
+
+//await exc.PrintWithdrawConfigAsync();
 
 //await exc.RefreshMetadataAsync();
 
 ////var a = await exc.GetUnifiedTotalUsdtAsync();
 
-//CurData c1 = await exc.GetLastPriceAsync("REDUSDT");
+//CurData c1 = await exc.GetLastPriceAsync("XDOGUSDT");
 //Console.WriteLine(c1.askPrice);
 //Console.WriteLine(c1.bidPrice);
 //Console.WriteLine(c1.askAmount);
 //Console.WriteLine(c1.bidAmount);
 
 
-////await exc.UpdateBalanceAsync(c1);
+////////await exc.UpdateBalanceAsync(c1);
 
 ////var v = await exc.GetAllCurrenciesAsync();
 ////Console.WriteLine(v.Count());
 
-////Console.WriteLine(exc.totalUSDT);
+//////Console.WriteLine(exc.totalUSDT);
+
+//Console.WriteLine("done");
+//Console.ReadLine();
 
 //Task<OrderResult> rB = c1.BuyAsync(11.1m);
 //Console.WriteLine("Done");

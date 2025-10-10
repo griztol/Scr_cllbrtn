@@ -55,7 +55,8 @@ namespace Scr_cllbrtn.Exchanges
             }
 
             string symbol = curNm.Replace("USDT", "-USDT");
-            string ans = await SendApiRequestToExchangeAsync($"https://open-api.bingx.com/openApi/swap/v2/quote/depth?symbol={symbol}&limit=5");
+            string ans = await SendApiRequestToExchangeAsync($"https://open-api.bingx.com/openApi/swap/v2/quote/depth?symbol={symbol}&limit=10");
+            Logger.Add(curNm, exName + " " + ans, LogType.Data);
 
             JObject item = JsonConvert.DeserializeObject<JObject>(ans)?["data"] as JObject ?? new JObject();
 

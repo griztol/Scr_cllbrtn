@@ -12,6 +12,7 @@ namespace Scr_cllbrtn
     {
         public async Task<DealCloser> MakeDealAsync(CurData curBuy, CurData curSell)
         {
+
             //if (!curSell.exchange.Contains("Ft")) { return null; }
             Task<CurData> tS = curSell.UpdateAsync();
             Task<CurData> tB = curBuy.UpdateAsync();
@@ -43,7 +44,7 @@ namespace Scr_cllbrtn
             }
 
             LogPotentialDeal(curBuy, curSell);
-            return null;
+            return new DealCloser(curSell, curBuy);
 
             Logger.Add(curBuy.name, $"{curBuy.exchange} PendingPriceIn Buy: {curBuy.askPrice};", LogType.Info);
             Logger.Add(curSell.name, $"{curSell.exchange} PendingPriceIn Sell: {curSell.bidPrice};", LogType.Info);
@@ -131,11 +132,12 @@ namespace Scr_cllbrtn
         {
             if (cS == null || cB == null) return false;
 
-            bool enoughBuy = cB.askPrice * cB.askAmount >= GlbConst.LiquidityCheckUsd;
-            bool enoughSell = cS.bidPrice * cS.bidAmount >= GlbConst.LiquidityCheckUsd;
+            bool enoughBuy = cB.askPrice * cB.askAmount + 1 >= GlbConst.LiquidityCheckUsd;
+            bool enoughSell = cS.bidPrice * cS.bidAmount + 1 >= GlbConst.LiquidityCheckUsd;
             if (!enoughBuy || !enoughSell)
             {
-                Logger.Add(cB.name, $"Liquidity fail: buyUSD={(cB.askPrice * cB.askAmount):F2}, sellUSD={(cS.bidPrice * cS.bidAmount):F2} (need >= {GlbConst.LiquidityCheckUsd})", LogType.Info);
+                Logger.Add(cB.name, $"Liquidity fail: buyUSD={(cB.askPrice * cB.askAmount)}, sellUSD={(cS.bidPrice * cS.bidAmount)} (need >= {GlbConst.LiquidityCheckUsd})", LogType.Info);
+                //Logger.Add(cB.name, $"Liquidity fail: buyUSD={(cB.askPrice * cB.askAmount):F2}, sellUSD={(cS.bidPrice * cS.bidAmount):F2} (need >= {GlbConst.LiquidityCheckUsd})", LogType.Info);
                 return false;
             }
 

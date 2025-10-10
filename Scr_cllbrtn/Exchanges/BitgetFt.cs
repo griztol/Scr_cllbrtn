@@ -80,8 +80,9 @@ namespace Scr_cllbrtn.Exchanges
             }
 
             string ans = await SendApiRequestToExchangeAsync(
-                $"https://api.bitget.com/api/v3/market/orderbook?category=USDT-FUTURES&symbol={curNm}&limit=5");
+                $"https://api.bitget.com/api/v3/market/orderbook?category=USDT-FUTURES&symbol={curNm}&limit=10");
             Logger.Add(curNm, exName + " " + ans, LogType.Data);
+
             JObject item = JsonConvert.DeserializeObject<JObject>(ans)?["data"] as JObject;
 
             var asksToken = item?["a"] as JArray;

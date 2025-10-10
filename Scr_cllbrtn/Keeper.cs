@@ -14,7 +14,7 @@ namespace Scr_cllbrtn
         public bool NeedNewDeals()
         {
             bool res = true;
-            GlbConst.deals.RemoveAll(x => x._workDone);
+            GlbConst.deals.RemoveAll(x => x.workDone);
             if (GlbConst.deals.Count >= GlbConst.MaxOpenedDeals) { res = false; }
 
             if (Directory.EnumerateFiles(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "stop_*.txt", SearchOption.TopDirectoryOnly).FirstOrDefault() is string f)
@@ -34,6 +34,8 @@ namespace Scr_cllbrtn
         public void Inspect(CurData curBuy, CurData curSell)
         {
             if (GlbConst.deals.Count >= GlbConst.MaxOpenedDeals) { return; }
+
+            if (GlbConst.deals.Any(d => d.curBuy.name == curBuy.name || d.curSell.name == curBuy.name)) return;
 
             //double limitUsd = (double)AssetLimitManager.GetLimit(curSell.name) - (double)GlbConst.StepUsd * 0.5;
             //double limitUsd = 1.5;

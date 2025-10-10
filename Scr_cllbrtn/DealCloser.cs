@@ -12,8 +12,8 @@ namespace Scr_cllbrtn
         decimal timePenalty = 0;
         public CurData curSell;
         public CurData curBuy;
-        public volatile bool _workDone = false;
-        public volatile bool _resetCancelOrder = false;
+        public volatile bool workDone = false;
+        private volatile bool _resetCancelOrder = false;
         volatile bool _auditInProgress = false;
         DateTime _lastAdjust = DateTime.Now;
         private decimal _diffToAlign = 0m;
@@ -23,9 +23,10 @@ namespace Scr_cllbrtn
         Func<Task<OrderResult>> cancelOrder;
         public DealCloser(CurData cS, CurData cB)
         {
-            Thread.Sleep(7000);
+            //Thread.Sleep(7000);
             this.curSell = cB;
             this.curBuy = cS;
+            return;
 
             placeDelta = (decimal)(InOutPercent.GetCurrentThresholds(curSell, curBuy).outPrc / 100);
 
@@ -137,7 +138,7 @@ namespace Scr_cllbrtn
 
         async void UpdatePricesAsync(object p)
         {
-            if (_auditInProgress || _workDone) { return; }
+            if (_auditInProgress || workDone) { return; }
             if (!sem.WaitOne(1)) { return; }
 
             try
@@ -353,7 +354,7 @@ namespace Scr_cllbrtn
 
             int badCounter = 0;
 
-            while (!_workDone)
+            while (!workDone)
             {
                 decimal usdTail = Math.Abs((curSell.Balance + curBuy.Balance) * (decimal)curSell.askPrice);
                 Logger.Add(curBuy.name, $"WatchLoop: usdTail={usdTail:F4}$  badCnt={badCounter}", LogType.Info);
@@ -377,7 +378,7 @@ namespace Scr_cllbrtn
         {
             Logger.Add(curBuy.name, "Close() → start", LogType.Action);
 
-            _workDone = true;
+            workDone = true;
             EmergencyCancelAll().GetAwaiter().GetResult();
             curBuy.prnt.Unsubscribe(curBuy);
             curSell.prnt.Unsubscribe(curSell);

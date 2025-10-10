@@ -70,7 +70,7 @@ namespace Scr_cllbrtn.Exchanges
             }
 
             string ans = await SendApiRequestToExchangeAsync(
-                "https://api.gateio.ws/api/v4/spot/order_book?limit=5&currency_pair="
+                "https://api.gateio.ws/api/v4/spot/order_book?limit=10&currency_pair="
                 + curNm.Replace("USDT", "_USDT")
             );
             Logger.Add(curNm, exName + " " + ans, LogType.Data);

@@ -19,6 +19,7 @@ namespace Scr_cllbrtn
         public double FundingRate { get; init; }
         public byte PricePrecision { get; init; }
         public double MinOrderUSDT { get; init; }
+        public Boolean withdrawDisabled { get; init; }
     };
 
     public abstract class BaseExchange
@@ -83,7 +84,7 @@ namespace Scr_cllbrtn
             costSoFar = firstPrice * firstAmount;
             amountSoFar = firstAmount;
 
-            if (costSoFar < needDollars)
+            if (costSoFar <= needDollars)
             {
                 for (int i = 1; i < levels.Count; i++)
                 {
@@ -92,7 +93,7 @@ namespace Scr_cllbrtn
 
                     double lvlCost = price * amount;
 
-                    if (costSoFar + lvlCost >= needDollars)
+                    if (costSoFar + lvlCost > needDollars)
                     {
                         double neededDollars = needDollars - costSoFar;
                         double partialAmount = neededDollars / price;

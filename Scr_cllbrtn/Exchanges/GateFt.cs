@@ -72,13 +72,12 @@ namespace Scr_cllbrtn.Exchanges
             }
 
             string ans = await SendApiRequestToExchangeAsync(
-                "https://fx-api.gateio.ws/api/v4/futures/usdt/order_book?limit=5&contract="
+                "https://fx-api.gateio.ws/api/v4/futures/usdt/order_book?limit=10&contract="
                 + curNm.Replace("USDT", "_USDT")
             );
-
-            // Parse JSON
-            JObject? item = JsonConvert.DeserializeObject<JObject>(ans);
             Logger.Add(curNm, exName + " " + ans, LogType.Data);
+
+            JObject? item = JsonConvert.DeserializeObject<JObject>(ans);
 
 
             double tsVal = item?["current"] != null ? item["current"].Value<double>() : 0.0;

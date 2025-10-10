@@ -44,7 +44,7 @@ namespace Scr_cllbrtn.Exchanges
                 throw new Exception(curNm + "Not active in " + exName);
             }
 
-            string ans = await SendApiRequestToExchangeAsync($"https://api.bitget.com/api/v3/market/orderbook?category=SPOT&symbol={curNm}&limit=5");
+            string ans = await SendApiRequestToExchangeAsync($"https://api.bitget.com/api/v3/market/orderbook?category=SPOT&symbol={curNm}&limit=10");
             Logger.Add(curNm, exName + " " + ans, LogType.Data);
 
             JObject? jsonData = JsonConvert.DeserializeObject<JObject>(ans)?["data"] as JObject;

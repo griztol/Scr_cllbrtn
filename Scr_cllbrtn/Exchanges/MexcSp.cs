@@ -5,8 +5,9 @@ using Mexc.Net.Objects;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections.Concurrent;
-using System.Globalization;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Net.Http;
 
 
 namespace Scr_cllbrtn.Exchanges
@@ -93,7 +94,7 @@ namespace Scr_cllbrtn.Exchanges
             }
 
             string ans = await SendApiRequestToExchangeAsync(
-                "https://api.mexc.com/api/v3/depth?limit=7&symbol=" + curNm
+                "https://api.mexc.com/api/v3/depth?limit=10&symbol=" + curNm
             );
             Logger.Add(curNm, exName + " " + ans, LogType.Data);
 
@@ -366,6 +367,25 @@ namespace Scr_cllbrtn.Exchanges
 
             }
         }
+
+        public async Task PrintWithdrawConfigAsync()
+        {
+            var res = await httpClientJKorf.SpotApi.Account.GetUserAssetsAsync();
+
+            if (!res.Success)
+            {
+                Console.WriteLine("MEXC getall error: " + res.Error);
+                return;
+            }
+
+            // Если включен OutputOriginalData, тут будет сырой JSON/JToken
+            var raw = res.OriginalData?.ToString();
+            if (!string.IsNullOrWhiteSpace(raw))
+                Console.WriteLine(raw);
+            else
+                Console.WriteLine(JsonConvert.SerializeObject(res.Data, Formatting.Indented));
+        }
+
 
     }
 
